@@ -11,18 +11,29 @@ class MoviesController < ApplicationController
   end
 
   def index
+  
+  #ORDER BY TITLE OR RELEASE
     sort_choice = params[:sort]
     case sort_choice
     when 'title'
-      @movies = Movie.order(title: :asc)
+      @sorted_order = "title: :asc"
       @title = 'hilite'
     when 'release'
-      @movies = Movie.order(release_date: :asc)
+      @sorted_order = "release_date: :asc"
       @release = 'hilite'
-    else
-      @movies = Movie.all
     end
+
+  #FILTER BY AGE RATING
+    @all_ratings = Movie.distinct.pluck(:rating)
+    @rating_choice = []
+    rating_choice = params[:ratings]
+    @rating_choice = rating_choice.keys
+  
+    
+  #PASS SORT + FILTER TOGETHER TO THE VIEW
+    @movies = Movie.order(@sorted_order)
   end
+    
 
   def new
     # default: render 'new' template
